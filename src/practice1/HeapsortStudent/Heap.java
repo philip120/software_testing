@@ -33,8 +33,8 @@ public class Heap {
      * @return desired index of value of desired element
      */
     private int leftChildIndex(int index){
-        if (valueList.size() > (2*index)-1){
-            return (2*(index)-1);
+        if (valueList.size() > (2*index)+1){ //HERE IS THE FIX
+            return 2*index+1; //AND HERE
         }
         else return -1;
     }
@@ -47,8 +47,8 @@ public class Heap {
     }
 
     private int rightChildIndex(int index){
-        if (valueList.size() > (2*index)+2){
-            return (2*(index)+2);
+        if (valueList.size() > ((2*index)+2)){ //FIX HERE
+            return (2*index)+2; //FIX HERE
         }
         else return -1;
     }
@@ -69,7 +69,7 @@ public class Heap {
 
     private int elemParentIndex(int index){
         if (index > 0 ){
-            return index/2;
+            return (index-1)/2;
         }
         else return -1;
     }
@@ -77,37 +77,42 @@ public class Heap {
     /* Moves smaller elements down in the heap valueList tree, does nothing to other elements
      * @param index of the current element
      */
-    private void BubbleDown(int index){
-        if (valueList.size() > index ){
+    private void BubbleDown(int index) {
+        if (valueList.size() > index) {
             int currentElem = valueList.get(index);
-            int leftChild = leftChildElem(index);
-            int rightChild = rightChildElem(index);
+
             int leftChildIndex = leftChildIndex(index);
             int rightChildIndex = rightChildIndex(index);
 
-            if (currentElem < leftChild ){
-                if (leftChild > rightChild){
-                    valueList.set(index,rightChild);
-                    valueList.set(leftChildIndex, currentElem);
-                    BubbleDown(leftChildIndex);
-                }
-                else{
-                    valueList.set(index, rightChild);
-                    valueList.set(rightChildIndex, currentElem);
-                }
+            int leftChild = Integer.MIN_VALUE;
+            int rightChild = Integer.MIN_VALUE;
+
+            if (leftChildIndex != -1) {
+                leftChild = valueList.get(leftChildIndex);
             }
-            else {
-                if (rightChild > currentElem) {
+
+            if (rightChildIndex != -1) {
+                rightChild = valueList.get(rightChildIndex);
+            }
+
+            if ((leftChildIndex != -1 && currentElem < leftChild) ||
+                    (rightChildIndex != -1 && currentElem < rightChild)) {
+
+                if (rightChildIndex != -1 && leftChild < rightChild) {
+                    // Swap with right child and recurse
                     valueList.set(index, rightChild);
                     valueList.set(rightChildIndex, currentElem);
                     BubbleDown(rightChildIndex);
+                } else {
+                    // Swap with left child and recurse
+                    valueList.set(index, leftChild);
+                    valueList.set(leftChildIndex, currentElem);
+                    BubbleDown(leftChildIndex);
                 }
             }
         }
-        else {
-            return;
-        }
     }
+
 
     /* Moves larger elements up in heap valueList tree, does nothing to other elements
      * @param index of current element
@@ -118,7 +123,7 @@ public class Heap {
             int parent = elemParent(index);
             int parentIndex = elemParentIndex(index);
             if (currentElem > parent){
-                valueList.set(parent,index);
+                valueList.set(index, parent);
                 valueList.set(parentIndex,currentElem);
                 BubbleUp(parentIndex);
             }
@@ -151,10 +156,9 @@ public class Heap {
             valueList.set(indexOfRemoveElem, lastElem);
             int parentOfRemoved = elemParent(indexOfRemoveElem);
 
-            if (lastElem < parentOfRemoved){
+            if (indexOfRemoveElem > 0 && lastElem > parentOfRemoved) {
                 BubbleUp(indexOfRemoveElem);
-            }
-            else if (lastElem > parentOfRemoved) {
+            } else {
                 BubbleDown(indexOfRemoveElem);
             }
         }
