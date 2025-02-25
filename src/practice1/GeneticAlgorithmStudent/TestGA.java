@@ -1,7 +1,4 @@
-package practice1.GeneticAlgorithmStudent.src;
-
-import practice1.GeneticAlgorithmStudent.src.Algorithm;
-import practice1.GeneticAlgorithmStudent.src.Population;
+package practice1.GeneticAlgorithmStudent;
 
 import java.util.ArrayList;
 import java.util.List;

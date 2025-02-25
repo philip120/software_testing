@@ -1,7 +1,6 @@
-package practice1.HeapsortStudent.src;
+package practice1.HeapsortStudent;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /* Maximum binary heap for positive integers
